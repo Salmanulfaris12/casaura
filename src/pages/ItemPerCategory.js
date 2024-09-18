@@ -21,9 +21,9 @@ const ItemPerCategory = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-8 ">
-            <div className="mt-12 container mx-auto">
+            <div className=" mt-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-4xl font-bold text-teal-800 mb-6 text-center">{category}</h1>
-                <div className="grid grid-cols-1 mx-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 justify-center">
+                <div className="grid grid-cols-1 mx-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     {products.map((product) => (
                         <div
                             key={product.id}

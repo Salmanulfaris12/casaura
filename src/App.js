@@ -14,12 +14,16 @@ import Profile from './components/Profile'
 import Payment from './pages/Payment'
 import Ordersummary from './components/Ordersummary';
 import Categories from './components/Categories';
+import Userlist from './Admin/Userlist';
+import UserDetails from './Admin/UserDetails';
+import Productlist from './Admin/Productlist';
+import Productspercategory from './Admin/Productspercategory';
 
 
 function App() {
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/sign-up" element={<Signup/>}/>
@@ -32,8 +36,13 @@ function App() {
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/payment' element={<Payment/>}/>
       <Route path='/order-summary' element={<Ordersummary/>}/>
+
+      <Route path='/userlist' element={<Userlist/>}/>
+      <Route path='/userlist/:userid' element={<UserDetails/>}/>
+      <Route path='/productlist' element={<Productlist/>}/>
+      <Route path='/productlist/:productcategory' element={<Productspercategory/>}/>
     </Routes>
-    <Footer/>
+    {/* <Footer/> */}
     </>
 
   );

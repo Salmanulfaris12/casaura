@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Payment = () => {
   const [items, setItems] = useState([]);
+  const [errors,setErrors] =useState({})
   const userId = localStorage.getItem('userId');
   const [formData,setFormData]=useState({
     address: '',
@@ -37,6 +38,19 @@ const Payment = () => {
   };
 
   console.log(formData)
+
+  const validate =()=>{
+    const errors ={}
+    if(!formData.address)errors.address="Address is required";
+    if(!formData.city)errors.city="Name of your city is required"
+    if(!formData.state)errors.state="State is required";
+    if(!formData.phoneNumber)errors.phoneNumber="Number is required ";
+    else if (formData.phoneNumber.length<10 || formData.phoneNumber.length>10)errors.phoneNumber="Invalid phone number ";
+    if(!formData.zipCode)errors.zipCode="zip-code is required";
+    if(!formData.paymentMethod)errors.paymentMethod="you should choose any payment method";
+
+    return errors
+  }
  
 
   useEffect(() => {
@@ -50,15 +64,20 @@ const Payment = () => {
 
   const handleSubmit=async(e)=>{
     e.preventDefault();
-
+    const validationErrors=validate()
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    }else {
     try{
         await axios.patch(`http://localhost:3001/users/${userId}`,{orderdetails:{product:[...items],Address:[formData],totalPrice:total}})
         await axios.patch(`http://localhost:3001/users/${userId}`,{cart:[]})
         navigate("/order-summary",{replace:true})
+        setErrors({})
     }
     catch{
         console.log("error")
     }
+  }
 
   }
 
@@ -112,6 +131,7 @@ const Payment = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
+                {errors.address&& <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
               </div>
               <div>
                 <label className="block text-gray-700">City</label>
@@ -122,6 +142,7 @@ const Payment = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
+                {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
               </div>
               <div>
                 <label className="block text-gray-700">State</label>
@@ -132,6 +153,7 @@ const Payment = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
+                {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
               </div>
               <div>
                 <label className="block text-gray-700">Zip Code</label>
@@ -142,6 +164,7 @@ const Payment = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
+                {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>}
               </div>
               <div>
                 <label className="block text-gray-700">Phone Number</label>
@@ -152,6 +175,7 @@ const Payment = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
+                {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>}
               </div>
             </div>
 
@@ -171,6 +195,7 @@ const Payment = () => {
                 <input type="radio" id="cod" name="paymentMethod" className="h-4 w-4 text-teal-600"  onChange={handleChange} value="cash" checked={formData.paymentMethod==="cash"}/>
                 <label htmlFor="cod" className="ml-2 text-gray-700">Cash on Delivery</label>
               </div>
+              {errors.paymentMethod && <p className="text-red-500 text-xs mt-1">{errors.paymentMethod}</p>}
             </div>
 
             {/* Place Order Button */}
