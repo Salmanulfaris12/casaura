@@ -897,6 +897,15 @@
         "memory foam",
         "pressure relief"
       ]
+    },
+    {
+      "id": "2d29",
+      "name": "KASERA",
+      "description": "high quality chair white with royal look",
+      "category": "Chairs",
+      "price": "595",
+      "material": "metal,plastic",
+      "image": "https://www.ikea.com/in/en/images/products/teodores-chair-white__0727344_pe735616_s5.jpg?f=xl"
     }
   ],
   "category": [

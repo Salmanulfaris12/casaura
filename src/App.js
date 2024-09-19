@@ -18,6 +18,9 @@ import Userlist from './Admin/Userlist';
 import UserDetails from './Admin/UserDetails';
 import Productlist from './Admin/Productlist';
 import Productspercategory from './Admin/Productspercategory';
+import AddProducts from './Admin/AddProducts';
+import Productdetail from './Admin/Productdetail';
+import EditProducts from './Admin/EditProducts';
 
 
 function App() {
@@ -41,6 +44,9 @@ function App() {
       <Route path='/userlist/:userid' element={<UserDetails/>}/>
       <Route path='/productlist' element={<Productlist/>}/>
       <Route path='/productlist/:productcategory' element={<Productspercategory/>}/>
+      <Route path='/productcategory/:id' element={<Productdetail/>}/>
+      <Route path='/productdetail/:id' element={<EditProducts/>}/>
+      <Route path='/addproducts' element={<AddProducts/>}/>
     </Routes>
     {/* <Footer/> */}
     </>

@@ -18,8 +18,8 @@ const Productspercategory = () => {
 
     const products = items.filter((ele) => ele.category === productcategory);
 
-    const take=()=>{
-        navigate()
+    const take=(id)=>{
+        navigate(`/productcategory/${id}`)
     }
 
     return (
@@ -30,7 +30,7 @@ const Productspercategory = () => {
                     products.map((product) => (
                         <div key={product.id}
                         onClick={()=>take(product.id)}
-                        className="border rounded-lg shadow-md p-4 flex items-center space-x-4">
+                        className="cursor-pointer border rounded-lg shadow-md p-4 flex items-center space-x-4">
                             <img src={product.image} alt={product.name} className="w-24 h-24 object-cover rounded-lg" />
                             <div className="flex-1">
                                 <h2 className="text-lg text-teal-800 font-semibold mb-2">{product.name}</h2>

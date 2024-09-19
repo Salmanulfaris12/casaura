@@ -24,7 +24,7 @@ const Productlist = () => {
           <div
             key={item.id}
             onClick={()=>take(item.name)}
-            className="flex items-center border border-gray-200 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300"
+            className="flex items-center cursor-pointer border border-gray-200 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300"
           >
             <div className="w-24 h-24 flex-shrink-0">
               <img
