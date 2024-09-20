@@ -53,7 +53,7 @@ const Productdetail = () => {
               Back
             </button>
             <button
-              onClick={() =>navigate(`/productdetail/${item.id}`) }
+              onClick={() =>navigate(`/admin/producte/${item.id}`) }
               className="flex-1 py-3 bg-teal-700 text-lg text-white font-semibold rounded-md hover:bg-teal-800 transition duration-300"
             >
               Edit

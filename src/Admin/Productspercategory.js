@@ -19,7 +19,7 @@ const Productspercategory = () => {
     const products = items.filter((ele) => ele.category === productcategory);
 
     const take=(id)=>{
-        navigate(`/productcategory/${id}`)
+        navigate(`/admin/productd/${id}`)
     }
 
     return (

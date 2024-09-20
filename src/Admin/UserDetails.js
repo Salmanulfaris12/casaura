@@ -5,15 +5,23 @@ import { useParams } from 'react-router-dom';
 const UserDetails = () => {
   const [user, setUser] = useState({});
   const { userid } = useParams();
+  
 
   useEffect(() => {
     axios
       .get(`http://localhost:3001/users/${userid}`)
       .then((res) => setUser(res.data))
-      .catch((err) => console.log('fetching error', err));
+      .catch((err) => console.log('fetching error', err)); 
   }, [userid]);
 
-  // Check if user and orderdetails exist before deconstructing
+
+  const handleBlock=async()=>{
+    await axios.patch(`http://localhost:3001/users/${userid}`,{isAllowed:!user.isAllowed})
+    console.log ("block handled",user)
+    await axios.get(`http://localhost:3001/users/${userid}`)
+    .then((res) => setUser(res.data))
+  }
+
   const orderDetails = user.orderdetails || {};
   const { Address = [] } = orderDetails;
   const { product = [] } = orderDetails;
@@ -29,9 +37,14 @@ const UserDetails = () => {
           <p className="text-gray-700 mt-2">
             <span className="font-medium">Name:</span> {user.name}
           </p>
-          <p className="text-gray-700">
+          <p className="text-gray-700 truncate">
             <span className="font-medium">Email:</span> {user.email}
           </p>
+          <div className='mt-2 flex justify-center'>
+            <button onClick={handleBlock}
+            className={`${user.isAllowed?'bg-red-800':'bg-teal-800'} py-2 w-full rounded text-white text-xl font-semibold`}>
+            {user.isAllowed?'Block':'UnBlock'}</button>
+          </div>
         </div>
 
         {/* Order Details */}

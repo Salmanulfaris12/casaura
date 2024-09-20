@@ -68,7 +68,7 @@ const EditProducts = () => {
     }
 
   return (
-    <div className="max-w-lg mx-auto bg-white p-8 mt-10 rounded-xl shadow-lg border border-gray-200">
+    <div className="w-2/3 mx-auto bg-white p-8 mt-10 rounded-xl shadow-lg border border-gray-200">
     <h2 className="text-3xl font-semibold text-teal-800 mb-6">Update Product</h2>
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex flex-col">

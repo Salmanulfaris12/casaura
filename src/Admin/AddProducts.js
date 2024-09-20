@@ -55,8 +55,8 @@ const AddProducts = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-white p-8 mt-10 rounded-xl shadow-lg border border-gray-200">
-      <h2 className="text-3xl font-semibold text-teal-800 mb-6">Add New Product</h2>
+    <div className="w-full max-w-lg mx-auto bg-white p-6 md:p-8 mt-10 rounded-xl shadow-lg border border-gray-200">
+      <h2 className="text-2xl md:text-3xl font-semibold text-teal-800 mb-6">Add New Product</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col">
           <label className="text-lg font-medium text-teal-700">Item Name</label>
@@ -142,3 +142,4 @@ const AddProducts = () => {
 };
 
 export default AddProducts;
+

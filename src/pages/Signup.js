@@ -44,7 +44,7 @@ const Signup = () => {
         } else {
           console.log(formData);
           // Handle form submission logic
-            axios.post("http://localhost:3001/users",{...formData,cart:[]})
+            axios.post("http://localhost:3001/users",{...formData,cart:[],isAllowed:true})
                 .then((res)=> {
                     console.log(res)
                     setSubmitSuccess(true)

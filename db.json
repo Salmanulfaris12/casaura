@@ -1,12 +1,21 @@
 {
   "users": [
     {
+      "id": "7d59",
+      "name": "admin",
+      "email": "admin@gmail.com",
+      "password": "admin@123",
+      "isAdmin": true,
+      "isAllowed": true
+    },
+    {
       "id": "7d58",
       "name": "salman",
       "email": "salmanulfariskp702@gmail.com",
       "password": "halloooo",
       "confirmPassword": "halloooo",
       "cart": [],
+      "isAllowed": true,
       "orderdetails": {
         "product": [
           {
@@ -99,6 +108,7 @@
       "password": "qwer1234",
       "confirmPassword": "qwer1234",
       "cart": [],
+      "isAllowed": true,
       "orderdetails": {
         "product": [
           {
@@ -191,6 +201,7 @@
       "password": "ashiq@123",
       "confirmPassword": "ashiq@123",
       "cart": [],
+      "isAllowed": true,
       "orderdetails": {
         "product": [
           {
@@ -897,15 +908,6 @@
         "memory foam",
         "pressure relief"
       ]
-    },
-    {
-      "id": "2d29",
-      "name": "KASERA",
-      "description": "high quality chair white with royal look",
-      "category": "Chairs",
-      "price": "595",
-      "material": "metal,plastic",
-      "image": "https://www.ikea.com/in/en/images/products/teodores-chair-white__0727344_pe735616_s5.jpg?f=xl"
     }
   ],
   "category": [

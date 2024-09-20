@@ -14,7 +14,7 @@ const Productlist = () => {
   }, []);
 
   const take=(productcategory)=>{
-    navigate(`/productlist/${productcategory}`)
+    navigate(`/admin/productl/${productcategory}`)
   }
 
   return (

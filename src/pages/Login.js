@@ -12,7 +12,6 @@ const Login = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const [submitSuccess, setSubmitSuccess] = useState(null);
 
   useEffect((user)=>{
     const storeduser= localStorage.getItem("user")
@@ -50,8 +49,13 @@ const Login = () => {
           const user = users.find(
             (user) => user.email === formData.email && user.password === formData.password
           );
-          if (user) {
-            setSubmitSuccess(true);
+          const isAdmin=user.isAdmin; 
+          if(isAdmin){
+            console.log("Admin login successfull:",user)
+            localStorage.setItem("adminId",user.id)
+            navigate("/admin")
+          }
+          else if (user && user.isAllowed) {
             console.log("Login successful:", user);
 
             localStorage.setItem("userId",user.id)
@@ -61,14 +65,15 @@ const Login = () => {
             })
             navigate("/",{replace:true})
             // alert("Login Successfull")
-          } else {
-            setSubmitSuccess(false);
+          }else if(!user.isAllowed){
+            setErrors({login:"You restricted or Blocked"})
+          }
+           else {
             setErrors({ login: "Invalid email or password" });
           }
         })
         .catch((err) => {
           console.log("Error fetching users:", err);
-          setSubmitSuccess(false);
         });
     }
   };
@@ -115,9 +120,7 @@ const Login = () => {
               className='w-full py-2 px-4 bg-teal-800 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500'>
               Log In
             </button>
-            {submitSuccess === true && <p className="text-green-500 text-xs mt-2">Login successful!</p>}
-            {submitSuccess === false && <p className="text-red-500 text-xs mt-2">Invalid credentials. Please try again.</p>}
-            {errors.login && <p className="text-red-500 text-xs mt-2">{errors.login}</p>}
+            {errors.login && <p className="text-red-500 text-md mt-2">{errors.login}</p>}
           </div>
         </form>
         <div className='mt-1'>

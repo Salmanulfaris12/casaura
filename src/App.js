@@ -21,6 +21,8 @@ import Productspercategory from './Admin/Productspercategory';
 import AddProducts from './Admin/AddProducts';
 import Productdetail from './Admin/Productdetail';
 import EditProducts from './Admin/EditProducts';
+import AdminLayout from './Admin/AdminLayout';
+
 
 
 function App() {
@@ -40,15 +42,22 @@ function App() {
       <Route path='/payment' element={<Payment/>}/>
       <Route path='/order-summary' element={<Ordersummary/>}/>
 
-      <Route path='/userlist' element={<Userlist/>}/>
-      <Route path='/userlist/:userid' element={<UserDetails/>}/>
-      <Route path='/productlist' element={<Productlist/>}/>
-      <Route path='/productlist/:productcategory' element={<Productspercategory/>}/>
-      <Route path='/productcategory/:id' element={<Productdetail/>}/>
-      <Route path='/productdetail/:id' element={<EditProducts/>}/>
-      <Route path='/addproducts' element={<AddProducts/>}/>
+      {/* admin section */}
+
+      <Route path='/admin' element={<AdminLayout/>}>
+        <Route path='userlist' element={<Userlist/>}/>
+        <Route path='userd/:userid' element={<UserDetails/>}/>
+        <Route path='productlist' element={<Productlist/>}/>
+        <Route index element={<Productlist/>}/>
+        <Route path='productl/:productcategory' element={<Productspercategory/>}/>
+        <Route path='productd/:id' element={<Productdetail/>}/>
+        <Route path='producte/:id' element={<EditProducts/>}/>
+        <Route path='addproducts' element={<AddProducts/>}/>
+      </Route>
+
     </Routes>
     {/* <Footer/> */}
+  
     </>
 
   );
