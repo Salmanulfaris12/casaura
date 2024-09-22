@@ -1,5 +1,5 @@
 import './App.css';
-import { Route,Routes } from 'react-router-dom';
+import { Route,Routes, useLocation } from 'react-router-dom';
 
 import Signup from './pages/Signup';
 import Home from './pages/Home';
@@ -22,19 +22,25 @@ import AddProducts from './Admin/AddProducts';
 import Productdetail from './Admin/Productdetail';
 import EditProducts from './Admin/EditProducts';
 import AdminLayout from './Admin/AdminLayout';
+import NoMatch from './components/Nomatch';
+import Dashboard from './Admin/Dashboard';
 
 
 
 function App() {
+const location=useLocation()
+
+const display=location.pathname.startsWith("/admin")
+
   return (
     <>
-    {/* <Navbar/> */}
+    {!display && <Navbar/>}
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/sign-up" element={<Signup/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/store" element={<Store/>}/>
-      <Route path="/:id" element={<Productdetails/>}/>
+      <Route path="/product/:id" element={<Productdetails/>}/>
       <Route path='/category' element={<Categories/>}/>
       <Route path='/category/:category' element={<ItemPerCategory/>} />
       <Route path='/cart' element={<Cart/>}/>
@@ -45,18 +51,19 @@ function App() {
       {/* admin section */}
 
       <Route path='/admin' element={<AdminLayout/>}>
+        <Route path='dashboard' element={<Dashboard/>}/>
+        <Route index element={<Dashboard/>}/>
         <Route path='userlist' element={<Userlist/>}/>
         <Route path='userd/:userid' element={<UserDetails/>}/>
         <Route path='productlist' element={<Productlist/>}/>
-        <Route index element={<Productlist/>}/>
         <Route path='productl/:productcategory' element={<Productspercategory/>}/>
         <Route path='productd/:id' element={<Productdetail/>}/>
         <Route path='producte/:id' element={<EditProducts/>}/>
         <Route path='addproducts' element={<AddProducts/>}/>
       </Route>
-
+      <Route path='*' element={<NoMatch/>}/>
     </Routes>
-    {/* <Footer/> */}
+    {!display && <Footer/> }
   
     </>
 

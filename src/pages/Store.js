@@ -14,7 +14,7 @@ const Store = () => {
   }, []);
 
   const take=(id)=>{
-    navigate(`/${id}`)
+    navigate(`/product/${id}`)
   }
 
   return (

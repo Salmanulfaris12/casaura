@@ -16,7 +16,7 @@ const ItemPerCategory = () => {
     const products = items.filter((ele) => ele.category === category)
 
     const handleProductClick = (id) => {
-        navigate(`/${id}`)
+        navigate(`/product/${id}`)
     }
 
     return (

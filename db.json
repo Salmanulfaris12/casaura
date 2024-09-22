@@ -15,7 +15,7 @@
       "password": "halloooo",
       "confirmPassword": "halloooo",
       "cart": [],
-      "isAllowed": true,
+      "isAllowed": false,
       "orderdetails": {
         "product": [
           {
@@ -286,6 +286,15 @@
         ],
         "totalPrice": 2802.5
       }
+    },
+    {
+      "id": "86e3",
+      "name": "shanoof",
+      "email": "shanoof@gmail.com",
+      "password": "shanoof123",
+      "confirmPassword": "shanoof123",
+      "cart": [],
+      "isAllowed": true
     }
   ],
   "products": [
@@ -908,6 +917,24 @@
         "memory foam",
         "pressure relief"
       ]
+    },
+    {
+      "id": "5305",
+      "name": "GLADOM",
+      "description": "Tray table,Black",
+      "category": "Tables",
+      "price": "200",
+      "material": "metalic",
+      "image": "https://www.ikea.com/in/en/images/products/gladom-tray-table-black__0567223_pe664991_s5.jpg?f=xl"
+    },
+    {
+      "id": "2b15",
+      "name": "GLOSTAD",
+      "description": "2 seat,medium blue ",
+      "category": "Sofas",
+      "price": "450",
+      "material": "fabric",
+      "image": "https://www.ikea.com/in/en/images/products/glostad-2-seat-sofa-knisa-medium-blue__0950900_pe800740_s5.jpg?f=xl"
     }
   ],
   "category": [

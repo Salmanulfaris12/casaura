@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
-import { NavLink, Outlet } from 'react-router-dom';
-import { FaHome, FaList, FaUsers, FaPlus } from 'react-icons/fa';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { FaChartBar, FaList, FaUsers, FaPlus } from 'react-icons/fa';
 import { TbLogout2 } from 'react-icons/tb';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import axios from 'axios';
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [admin,setAdmin] =useState(false)
+  const [showLogout,setShowLogout]=useState(false)
+  const navigate=useNavigate()
+  const id=localStorage.getItem("adminId")
+ 
+  
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   const handleLogout=()=>{
+    localStorage.clear()
+    navigate("/")
+  }
+
+  useEffect(()=>{
+    axios.get(`http://localhost:3001/users/${id}`)
+    .then((res) => {
+      console.log(res.data?.isAdmin); 
+      if (res.data?.isAdmin) {
+        setAdmin(true); 
+      }
+    })
+      .catch(err=>console.log("error occured",err))
     
+  },[id])
+  console.log(admin)
+  if(!id && !admin){
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="text-center p-8 bg-white shadow rounded">
+          <h1 className="text-4xl font-bold text-red-600 mb-4">Access Denied</h1>
+          <p className="text-gray-600">You do not have permission to access this page.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -41,14 +72,14 @@ const AdminLayout = () => {
         <ul className="space-y-4">
           <li>
             <NavLink
-              to="/"
+              to="dashboard"
               className={({ isActive }) =>
                 `flex items-center gap-2 p-2 rounded ${
                   isActive ? 'bg-teal-700' : 'hover:bg-teal-700'
                 }`
               }
             >
-              <FaHome className="text-2xl" />
+              <FaChartBar className="text-xl" />
               <span className="hidden lg:inline">Dashboard</span>
             </NavLink>
           </li>
@@ -92,13 +123,37 @@ const AdminLayout = () => {
             </NavLink>
           </li>
           <li>
-            <button className="flex items-center gap-2 p-2 w-full rounded bg-teal-800 hover:bg-teal-700">
+            <button onClick={()=>setShowLogout(!showLogout)}
+             className="flex items-center gap-2 p-2 w-full rounded bg-teal-800 hover:bg-teal-700">
               <TbLogout2 className="text-2xl" />
               <span className="hidden lg:inline">Logout</span>
             </button>
           </li>
         </ul>
       </div>
+      {showLogout ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg max-w-sm w-full border border-gray-200">
+            <h1 className="text-xl font-semibold text-teal-800 mb-4">Are You Sure?</h1>
+            <div className="flex justify-end gap-4">
+              <button 
+                onClick={handleLogout}
+                className="px-4 py-2 bg-teal-800 text-white rounded-md hover:bg-teal-900 focus:outline-none focus:ring-2 focus:ring-teal-600 transition duration-300"
+              >
+                Yes, I'm
+              </button>
+              <button
+                onClick={() => setShowLogout(!showLogout)}
+                className="px-4 py-2 bg-gray-100 text-teal-800 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600 transition duration-300"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+
 
       {/* Main Content Area */}
       <div
