@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useCart } from '../Context/Cartcontext';
+
 
 const Productdetails = () => {
     const { id } = useParams();
@@ -8,6 +10,7 @@ const Productdetails = () => {
     const [quantity,setQuantity]=useState(1)
     const userId=localStorage.getItem("userId")
     const navigate=useNavigate()
+    const {setCart}=useCart()
 
     const getcart=async(userId)=>{
      const response=await axios.get(`http://localhost:3001/users/${userId}`)
@@ -28,13 +31,14 @@ const Productdetails = () => {
         updatedCart= [...currentCart,{...product,quantity:qty}]
       }
       axios.patch(`http://localhost:3001/users/${userId}`,{cart:updatedCart})
-      .then((res)=>console.log(res))
+      .then((res)=>{console.log(res)
+        setCart(updatedCart)
+      })
+     
       alert("Product is added to Cart")
     }
      
-    
-
-
+  
   
 
     useEffect(() => {

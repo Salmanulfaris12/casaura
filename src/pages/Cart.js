@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import emptycart from '../assets/pngwing.com.png'
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Context/Cartcontext';
 
 const Cart = () => {
+    const {setCart}=useCart()
     const [item, setItem] = useState([]);
     const userId = localStorage.getItem("userId");
     const navigate=useNavigate()
@@ -33,6 +35,7 @@ const Cart = () => {
        setItem(removedCart)
 
        await axios.patch(`http://localhost:3001/users/${userId}`,{cart:removedCart})
+       setCart(removedCart)
 
     }
     const handleProceed = () => {

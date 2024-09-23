@@ -12,6 +12,7 @@ const Login = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
+  const adminId =localStorage.getItem("adminId")
 
   useEffect((user)=>{
     const storeduser= localStorage.getItem("user")
@@ -78,6 +79,13 @@ const Login = () => {
     }
   };
 
+  useEffect(()=>{
+    if(adminId){
+      navigate("/admin")
+    }
+    console.log("kkkk");
+    
+  },[])
   return (
     <div className='min-h-screen bg-teal-800 flex items-center justify-center'>
       <div className='w-full max-w-md bg-white p-8 rounded-lg shadow-lg'>
