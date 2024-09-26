@@ -75,7 +75,7 @@ const Navbar = () => {
                           <p className="text-gray-500">{item.category}</p>
                         </li>
                       ))
-                    ) : (null)}
+                    ) : (null)} 
                   </ul>
                 </div>
               </div>

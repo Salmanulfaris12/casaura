@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useCart} from '../Context/Cartcontext';
 
 const Payment = () => {
+  const {setCart}=useCart();
   const [items, setItems] = useState([]);
   const [errors,setErrors] =useState({})
   const userId = localStorage.getItem('userId');
@@ -73,6 +75,7 @@ const Payment = () => {
         await axios.patch(`http://localhost:3001/users/${userId}`,{cart:[]})
         navigate("/order-summary",{replace:true})
         setErrors({})
+        setCart([])
     }
     catch{
         console.log("error")

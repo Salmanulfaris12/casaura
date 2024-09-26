@@ -39,7 +39,7 @@
           "quantity": 1
         }
       ],
-      "isAllowed": true,
+      "isAllowed": false,
       "orderdetails": {
         "product": [
           {
@@ -226,70 +226,25 @@
       "confirmPassword": "ashiq@123",
       "cart": [
         {
-          "id": "3",
-          "name": "LANDSKRONA",
-          "description": "3-seat sofa, Gunnared dark grey/wood",
+          "id": "2",
+          "name": "EKTORP",
+          "description": "3-seat sofa with chaise longue, Kilanda light beige",
           "category": "Sofas",
-          "price": 950,
-          "stock": 8,
-          "rating": 4.5,
-          "material": "Fabric",
-          "image": "https://www.ikea.com/in/en/images/products/landskrona-3-seat-sofa-gunnared-dark-grey-wood__0602117_pe680186_s5.jpg?f=l",
-          "images": [
-            "https:/https://www.ikea.com/in/en/images/products/landskrona-3-seat-sofa-gunnared-dark-grey-wood__0602117_pe680186_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/landskrona-3-seat-sofa-gunnared-dark-grey-wood__0828969_pe680187_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/landskrona-3-seat-sofa-gunnared-dark-grey-wood__0825417_pe707723_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/landskrona-3-seat-sofa-gunnared-dark-grey-wood__0813416_ph166494_s5.jpg?f=l"
-          ],
-          "tags": [
-            "convertible",
-            "fabric",
-            "sofa bed"
-          ],
-          "quantity": 1
-        },
-        {
-          "id": "12",
-          "name": "EBBALYCKE",
-          "description": "Chair, Idekulla beige",
-          "category": "Chairs",
-          "price": 500,
-          "stock": 12,
-          "rating": 4.5,
-          "material": "Fabric, Metal",
-          "image": "https://www.ikea.com/in/en/images/products/ebbalycke-chair-idekulla-beige__1243346_pe920576_s5.jpg?f=l",
-          "images": [
-            "https://www.ikea.com/in/en/images/products/ebbalycke-chair-idekulla-beige__1243346_pe920576_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ebbalycke-chair-idekulla-beige__1277259_pe931036_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ebbalycke-chair-idekulla-beige__1276089_ph195884_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ebbalycke-chair-idekulla-beige__1276088_ph195437_s5.jpg?f=l"
-          ],
-          "tags": [
-            "armchair",
-            "living room"
-          ],
-          "quantity": 1
-        },
-        {
-          "id": "24",
-          "name": "JOKKMOKK",
-          "description": "Table and 4 chairs, antique stain",
-          "category": "Dining Tables",
-          "price": 900,
+          "price": 1500,
           "stock": 10,
-          "rating": 4.6,
-          "material": "solid wood",
-          "image": "https://www.ikea.com/in/en/images/products/jokkmokk-table-and-4-chairs-antique-stain__0736929_pe740809_s5.jpg?f=xl",
+          "rating": 4.7,
+          "material": "Fabric",
+          "image": "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194849_pe902099_s5.jpg?f=l",
           "images": [
-            "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1329483_pe945163_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1340219_pe948521_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__0809033_ph149979_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1034253_pe837584_s5.jpg?f=l"
+            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194849_pe902099_s5.jpg?f=l",
+            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194848_pe902098_s5.jpg?f=l",
+            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194830_pe902079_s5.jpg?f=l",
+            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__0717901_pe731384_s5.jpg?f=l"
           ],
           "tags": [
-            "modern",
-            "wood",
-            "dining"
+            "sectional",
+            "fabric",
+            "living room"
           ],
           "quantity": 1
         }
@@ -298,86 +253,40 @@
       "orderdetails": {
         "product": [
           {
-            "id": "1",
-            "name": "GAMMALBYN",
-            "description": "3-seat sofa, grey",
-            "category": "Sofas",
-            "price": 1200,
-            "stock": 15,
-            "rating": 4.8,
-            "material": "Leather",
-            "image": "https://www.ikea.com/in/en/images/products/gammalbyn-3-seat-sofa-grey__0868926_pe781434_s5.jpg?f=l",
-            "images": [
-              "https://www.ikea.com/in/en/images/products/gammalbyn-3-seat-sofa-grey__0868926_pe781434_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/gammalbyn-3-seat-sofa-grey__0868927_pe781435_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/gammalbyn-3-seat-sofa-grey__0868929_pe781437_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/gammalbyn-3-seat-sofa-grey__0868928_pe781439_s5.jpg?f=l"
-            ],
-            "tags": [
-              "modern",
-              "leather",
-              "living room"
-            ],
-            "quantity": 2
-          },
-          {
-            "id": "14",
-            "name": "UTESPELARE",
-            "description": "Gaming desk, black,",
-            "category": "Tables",
-            "price": 200,
-            "stock": 18,
+            "id": "9",
+            "name": "SKOGSTA / BERGMUND",
+            "description": "Table and 6 chairs, acacia/Kvillsfors dark blue/blue black, 235x100 cm (92 1/2x39 3/8 )",
+            "category": "Dining Tables",
+            "price": 900,
+            "stock": 10,
             "rating": 4.6,
-            "material": "wood, Metal",
-            "image": "https://www.ikea.com/in/en/images/products/utespelare-gaming-desk-black__0985179_pe816538_s5.jpg?f=l",
+            "material": "solid wood",
+            "image": "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1329483_pe945163_s5.jpg?f=l",
             "images": [
-              "https://www.ikea.com/in/en/images/products/utespelare-gaming-desk-black__0985179_pe816538_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/utespelare-gaming-desk-black__0997874_pe822843_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/utespelare-gaming-desk-black__0997777_pe822755_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/utespelare-gaming-desk-black__0985180_pe816539_s5.jpg?f=l"
+              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1329483_pe945163_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1340219_pe948521_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__0809033_ph149979_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1034253_pe837584_s5.jpg?f=l"
             ],
             "tags": [
               "modern",
-              "fiber",
-              "living room"
-            ],
-            "quantity": 1
-          },
-          {
-            "id": "18",
-            "name": "MATCHSPEL",
-            "description": "Gaming chair, Bomstad black",
-            "category": "Gaming Chairs",
-            "price": 350,
-            "stock": 25,
-            "rating": 4.9,
-            "material": "Mesh, Leather",
-            "image": "https://www.ikea.com/in/en/images/products/matchspel-gaming-chair-bomstad-black__0985645_pe816716_s5.jpg?f=l",
-            "images": [
-              "https://www.ikea.com/in/en/images/products/matchspel-gaming-chair-bomstad-black__0985645_pe816716_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/matchspel-gaming-chair-bomstad-black__0984824_pe816429_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/matchspel-gaming-chair-bomstad-black__0984827_pe816430_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/matchspel-gaming-chair-bomstad-black__0997853_pe822829_s5.jpg?f=l"
-            ],
-            "tags": [
-              "ergonomic",
-              "gaming",
-              "adjustable"
+              "wood",
+              "dining"
             ],
             "quantity": 1
           }
         ],
         "Address": [
           {
-            "address": "perinthalmanna",
-            "city": "perinthalmanna",
-            "state": "kerela",
+            "address": "C. Falsa 445",
+            "city": "nellayss",
+            "state": "kerla",
             "zipCode": "679321",
-            "phoneNumber": "9656747617",
+            "phoneNumber": "9898976767",
             "paymentMethod": "cash"
           }
         ],
-        "totalPrice": 2802.5
+        "totalPrice": 855
       }
     },
     {
