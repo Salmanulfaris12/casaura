@@ -3,20 +3,20 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const Productspercategory = () => {
-    const { productcategory } = useParams();
+    const { categoryId } = useParams();
     const [items, setItems] = useState([]);
     const navigate=useNavigate()
 
     useEffect(() => {
-        axios.get("http://localhost:3001/products")
+        axios.get(`https://localhost:7151/api/Product/GetByCategory?CategoryId=${categoryId}`)
             .then((res) => {
-                console.log("Fetched products:", res.data); // Log API response to check structure
-                setItems(res.data);
+                console.log("Fetched products:", res.data.data); // Log API response to check structure
+                setItems(res.data.data);
             })
             .catch((err) => console.log("Fetching error:", err));
-    }, [productcategory]);
+    }, [categoryId]);
 
-    const products = items.filter((ele) => ele.category === productcategory);
+    // const products = items.filter((ele) => ele.category === productcategory);
 
     const take=(id)=>{
         navigate(`/admin/productd/${id}`)
@@ -24,18 +24,18 @@ const Productspercategory = () => {
 
     return (
         <div className="container mx-auto p-4 ">
-            <h1 className="text-2xl text-teal-800 font-bold mb-6">Products in {productcategory}</h1>
+            <h1 className="text-2xl text-teal-800 font-bold mb-6">Products </h1>
             <div className="space-y-6">
-                {products.length > 0 ? (
-                    products.map((product) => (
-                        <div key={product.id}
-                        onClick={()=>take(product.id)}
+                {items.length > 0 ? (
+                    items.map((product) => (
+                        <div key={product.productId}
+                        onClick={()=>take(product.productId)}
                         className="cursor-pointer border rounded-lg shadow-md p-4 flex items-center space-x-4">
-                            <img src={product.image} alt={product.name} className="w-24 h-24 object-cover rounded-lg" />
+                            <img src={product.image} alt={product.productName} className="w-24 h-24 object-cover rounded-lg" />
                             <div className="flex-1">
-                                <h2 className="text-lg text-teal-800 font-semibold mb-2">{product.name}</h2>
-                                <p className="text-gray-600 mb-2">{product.description}</p>
-                                <p className="text-xl text-teal-800 font-bold">${product.price}</p>
+                                <h2 className="text-lg text-teal-800 font-semibold mb-2">{product.productName}</h2>
+                                <p className="text-gray-600 mb-2">{product.productDescription}</p>
+                                <p className="text-xl text-teal-800 font-bold">₹{product.productPrice}</p>
                             </div>
                         </div>
                     ))

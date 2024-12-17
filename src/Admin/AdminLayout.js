@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FaChartBar, FaList, FaUsers, FaPlus } from 'react-icons/fa';
+import { FaChartBar, FaList, FaUsers, FaPlus,FaBoxOpen } from 'react-icons/fa';
 import { TbLogout2 } from 'react-icons/tb';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
@@ -11,7 +11,7 @@ const AdminLayout = () => {
   const [admin,setAdmin] =useState(false)
   const [showLogout,setShowLogout]=useState(false)
   const navigate=useNavigate()
-  const id=localStorage.getItem("adminId")
+  const adminToken=localStorage.getItem("adminToken")
  
   
 
@@ -25,18 +25,18 @@ const AdminLayout = () => {
   }
 
   useEffect(()=>{
-    axios.get(`http://localhost:3001/users/${id}`)
-    .then((res) => {
-      console.log(res.data?.isAdmin); 
-      if (res.data?.isAdmin) {
+    // axios.get(`http://localhost:3001/users/${id}`)
+    // .then((res) => {
+    //   console.log(res.data?.isAdmin); 
+      if (adminToken) {
         setAdmin(true); 
       }
-    })
-      .catch(err=>console.log("error occured",err))
+// })
+      // .catch(err=>console.log("error occured",err))
     
-  },[id])
+  },[adminToken])
   console.log(admin)
-  if(!id && !admin){
+  if(!adminToken && !admin){
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
         <div className="text-center p-8 bg-white shadow rounded">
@@ -107,6 +107,19 @@ const AdminLayout = () => {
             >
               <FaUsers className="text-2xl" />
               <span className="hidden lg:inline">Users List</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="orderdetails"
+              className={({ isActive }) =>
+                `flex items-center gap-2 p-2 rounded ${
+                  isActive ? 'bg-teal-700' : 'hover:bg-teal-700'
+                }`
+              }
+            >
+              <FaBoxOpen className="text-2xl" />
+              <span className="hidden lg:inline">Orders</span>
             </NavLink>
           </li>
           <li>

@@ -6,7 +6,7 @@
       "email": "admin@gmail.com",
       "password": "admin@123",
       "isAdmin": true,
-      "isAllowed": true
+      "isAllowed": true 
     },
     {
       "id": "7d58",
@@ -39,7 +39,7 @@
           "quantity": 1
         }
       ],
-      "isAllowed": false,
+      "isAllowed": true,
       "orderdetails": {
         "product": [
           {
@@ -224,69 +224,68 @@
       "email": "ashiq@gmail.com",
       "password": "ashiq@123",
       "confirmPassword": "ashiq@123",
-      "cart": [
-        {
-          "id": "2",
-          "name": "EKTORP",
-          "description": "3-seat sofa with chaise longue, Kilanda light beige",
-          "category": "Sofas",
-          "price": 1500,
-          "stock": 10,
-          "rating": 4.7,
-          "material": "Fabric",
-          "image": "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194849_pe902099_s5.jpg?f=l",
-          "images": [
-            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194849_pe902099_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194848_pe902098_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__1194830_pe902079_s5.jpg?f=l",
-            "https://www.ikea.com/in/en/images/products/ektorp-3-seat-sofa-with-chaise-longue-kilanda-light-beige__0717901_pe731384_s5.jpg?f=l"
-          ],
-          "tags": [
-            "sectional",
-            "fabric",
-            "living room"
-          ],
-          "quantity": 1
-        }
-      ],
+      "cart": [],
       "isAllowed": true,
       "orderdetails": {
         "product": [
           {
-            "id": "9",
-            "name": "SKOGSTA / BERGMUND",
-            "description": "Table and 6 chairs, acacia/Kvillsfors dark blue/blue black, 235x100 cm (92 1/2x39 3/8 )",
-            "category": "Dining Tables",
+            "id": "23",
+            "name": "SONGESAND",
+            "description": "Bed frame with 4 storage boxes, brown/Luröy",
+            "category": "Beds",
             "price": 900,
-            "stock": 10,
-            "rating": 4.6,
-            "material": "solid wood",
-            "image": "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1329483_pe945163_s5.jpg?f=l",
+            "stock": 5,
+            "rating": 4.4,
+            "material": "Wood",
+            "image": "https://www.ikea.com/in/en/images/products/songesand-bed-frame-with-4-storage-boxes-brown-luroey__1151018_pe884725_s5.jpg?f=xl",
             "images": [
-              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1329483_pe945163_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1340219_pe948521_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__0809033_ph149979_s5.jpg?f=l",
-              "https://www.ikea.com/in/en/images/products/skogsta-bergmund-table-and-6-chairs-acacia-kvillsfors-dark-blue-blue-black__1034253_pe837584_s5.jpg?f=l"
+              "https://www.ikea.com/in/en/images/products/nodeland-bed-frame-black-brown-luroey__0980296_pe814897_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/nodeland-bed-frame-black-brown-luroey__0980297_pe814900_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/nodeland-bed-frame-black-brown-luroey__0980298_pe814899_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/nodeland-bed-frame-black-brown-luroey__0980299_pe814898_s5.jpg?f=l"
+            ],
+            "tags": [
+              "rustic",
+              "wooden",
+              "bedroom"
+            ],
+            "quantity": 1
+          },
+          {
+            "id": "8",
+            "name": "EKEDALEN / EKEDALEN",
+            "description": "Table and 6 chairs, white white/Orrsta light grey,",
+            "category": "Dining Tables",
+            "price": 1100,
+            "stock": 7,
+            "rating": 4.9,
+            "material": "Marble, Metal",
+            "image": "https://www.ikea.com/in/en/images/products/ekedalen-ekedalen-table-and-6-chairs-white-white-orrsta-light-grey__1117948_pe872846_s5.jpg?f=l",
+            "images": [
+              "https://www.ikea.com/in/en/images/products/ekedalen-ekedalen-table-and-6-chairs-white-white-orrsta-light-grey__1117948_pe872846_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/ekedalen-ekedalen-table-and-6-chairs-white-white-orrsta-light-grey__1097290_pe864874_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/ekedalen-ekedalen-table-and-6-chairs-white-white-orrsta-light-grey__1052560_pe846215_s5.jpg?f=l",
+              "https://www.ikea.com/in/en/images/products/ekedalen-ekedalen-table-and-6-chairs-white-white-orrsta-light-grey__1052561_pe846216_s5.jpg?f=l"
             ],
             "tags": [
               "modern",
-              "wood",
+              "marble",
               "dining"
             ],
-            "quantity": 1
+            "quantity": 3
           }
         ],
         "Address": [
           {
             "address": "C. Falsa 445",
-            "city": "nellayss",
-            "state": "kerla",
-            "zipCode": "679321",
-            "phoneNumber": "9898976767",
-            "paymentMethod": "cash"
+            "city": "Ciudad de México",
+            "state": "MG",
+            "zipCode": "11001",
+            "phoneNumber": "6756456789",
+            "paymentMethod": "upi"
           }
         ],
-        "totalPrice": 855
+        "totalPrice": 3990
       }
     },
     {
@@ -415,7 +414,7 @@
       "name": "IDANÄS",
       "description": "Upholstered ottoman bed, Gunnared dark grey,",
       "category": "Beds",
-      "price": 950,
+      "price": "899",
       "stock": 12,
       "rating": 4.7,
       "material": "Fabric",
@@ -919,15 +918,6 @@
         "memory foam",
         "pressure relief"
       ]
-    },
-    {
-      "id": "5305",
-      "name": "GLADOM",
-      "description": "Tray table,Black",
-      "category": "Tables",
-      "price": "200",
-      "material": "metalic",
-      "image": "https://www.ikea.com/in/en/images/products/gladom-tray-table-black__0567223_pe664991_s5.jpg?f=xl"
     },
     {
       "id": "2b15",

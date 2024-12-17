@@ -10,7 +10,6 @@ const Signup = () => {
         name:"",
         email:"",
         password:"",
-        confirmPassword:""
     })
     const [errors,setErrors]=useState({})
     const [submitSuccess, setSubmitSuccess] = useState(null);
@@ -22,7 +21,12 @@ const Signup = () => {
         else if(!/\S+@\S+\.\S+/.test(formData.email))errors.name="Invalid Email";
         if(!formData.password)errors.password="Password is Required";
         else if(formData.password.length<8)errors.password="Password must contain 8 characters";
-        if(formData.password!==formData.confirmPassword)errors.confirmPassword="Password do not match";
+        else {
+            const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!regex.test(formData.password)) {
+              errors.password = 'Password must contain at least one letter, one number, and one special character';
+            }}
+
 
         return errors
     }
@@ -44,15 +48,14 @@ const Signup = () => {
         } else {
           console.log(formData);
           // Handle form submission logic
-            axios.post("http://localhost:3001/users",{...formData,cart:[],isAllowed:true})
+            axios.post("https://localhost:7151/api/Auth/Register",formData)
                 .then((res)=> {
                     console.log(res)
                     setSubmitSuccess(true)
                     setFormData({   
                         name: '',
                         email: '',
-                        password: '',
-                        confirmPassword: ''});
+                        password: '',});
                     setErrors({})
         }).catch((err)=>{
             console.log( "error in submitting form",err)
@@ -119,7 +122,7 @@ const Signup = () => {
                       />
                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
-                <div>
+                {/* <div>
                     <label htmlFor='confirmPassword' className='block text-gray-700'>Confirm Password</label>
                     <input 
                      type='password'
@@ -132,7 +135,7 @@ const Signup = () => {
                      required
                       />
                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-                </div>
+                </div> */}
                 <div>
                     <button 
                      type='submit'

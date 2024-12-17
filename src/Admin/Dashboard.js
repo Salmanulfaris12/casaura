@@ -10,24 +10,45 @@ defaults.responsive=true
 
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [revenue,setRevenue]=useState(null);
+  const [orderItems,setOrderItems]=useState(null)
 
   useEffect(() => {
-    // Fetch users
     axios
-      .get('http://localhost:3001/users')
-      .then((res) => setUsers(res.data))
-      .catch((err) => console.log('Error fetching users:', err));
-
-    // Fetch products
-    axios
-      .get('http://localhost:3001/products')
-      .then((res) => setProducts(res.data))
+      .get('https://localhost:7151/api/Product/All')
+      .then((res) => setProducts(res.data.data))
       .catch((err) => console.log('Error fetching products:', err));
   }, []);
 
-  // Filter out admin users
-  const filteredUsers = users.filter((usr) => !usr.isAdmin);
+  useEffect(()=>{
+    axios.get('https://localhost:7151/api/Order/totalrevenue',
+        {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+            }
+        })
+        .then((res)=>{
+            setRevenue(res.data);
+        })
+        .catch((err)=>{
+            console.log("totalRevenue error",err)
+        })
+
+    axios.get('https://localhost:7151/api/Order/totalproductspurchased',
+        {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+            }
+        })
+        .then((res)=>{
+            setOrderItems(res.data);
+        })
+        .catch((err)=>{
+            console.log("totalOrder error",err)
+        })
+},[])
+
+
 
   const productsByCategory = products.reduce((acc, product) => {
     acc[product.category] = (acc[product.category] || 0) + 1;
@@ -43,12 +64,12 @@ const Dashboard = () => {
         {/* Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold text-teal-700">Total Users</h2>
-            <p className="text-2xl font-bold">{filteredUsers.length}</p>
+            <h2 className="text-lg font-semibold text-teal-700">Total Revenue Generated</h2>
+            <p className="text-2xl font-bold">{revenue}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold text-teal-700">Active Products</h2>
-            <p className="text-2xl font-bold">{products.length}</p>
+            <h2 className="text-lg font-semibold text-teal-700">Total Product Purchased</h2>
+            <p className="text-2xl font-bold">{orderItems}</p>
           </div>
         </div>
       </main>

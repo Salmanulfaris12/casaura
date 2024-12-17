@@ -10,19 +10,39 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const userId = localStorage.getItem("userId");
+  const userToken = localStorage.getItem("userToken");
 
   useEffect(() => {
-    if (userId) {
+    if (userToken) {
       axios
-        .get(`http://localhost:3001/users/${userId}`)
-        .then((res) => setCart(res.data.cart))
+      .get("https://localhost:7151/api/Cart/All", {
+          headers: {
+              Authorization: `Bearer ${userToken}`,
+          },
+      })
+      .then((res) => {
+        console.log("API Response:", res.data);
+        setCart(res.data.data || []);
+    })
         .catch((err) => console.log(err));
     }
-  }, [userId]);
+  }, [userToken]);
 
+  const getcart=async()=>{
+    try{
+      const response=await axios.get("https://localhost:7151/api/Cart/All",{  
+        headers:{
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+           },
+});
+return response.data.data
+    }
+    catch(err){
+      console.log("error on getting cart",err);
+    }
+}
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
+    <CartContext.Provider value={{ cart, setCart,getcart}}>
       {children}
     </CartContext.Provider>
   );

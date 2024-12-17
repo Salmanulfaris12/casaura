@@ -9,17 +9,23 @@ const Productdetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/products/${id}`)
-      .then((res) => setItem(res.data))
-      .catch((err) => console.log('Error in fetching:', err));
+      .get(`https://localhost:7151/api/Product/GetById/${id}`)
+      .then((res) => setItem(res.data.data))
+      .catch((err) => console.error("Error fetching product:", err.response?.data || err.message));
   }, [id]);
 
   const handleRemove = async () => {
     try {
-      await axios.delete(`http://localhost:3001/products/${id}`);
+      await axios.delete(`https://localhost:7151/api/Product/Delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        }
+      );
       navigate(-1, { replace: true });
-    } catch {
-      console.log('Error');
+    } catch(err) {
+      console.error("Error in removing product:", err.response?.data || err.message);
     }
   };
 
@@ -29,21 +35,21 @@ const Productdetail = () => {
         <div className="flex-shrink-0">
           <img
             src={item.image}
-            alt={item.name}
+            alt={item.productName}
             className="w-full lg:w-80 h-80 object-cover rounded-lg shadow-md"
           />
         </div>
         <div className="flex flex-col justify-between flex-1">
           <div className="space-y-6">
-            <h2 className="text-4xl font-bold text-teal-800">{item.name}</h2>
-            <p className="text-lg text-teal-700">{item.description}</p>
+            <h2 className="text-4xl font-bold text-teal-800">{item.productName}</h2>
+            <p className="text-lg text-teal-700">{item.productDescription}</p>
             <p className="text-md text-gray-600">
               <span className="font-medium">Category:</span> {item.category}
             </p>
             <p className="text-md text-gray-600">
               <span className="font-medium">Material:</span> {item.material}
             </p>
-            <p className="text-2xl font-bold text-teal-800">${item.price}</p>
+            <p className="text-2xl font-bold text-teal-800">₹{item.productPrice}</p>
           </div>
           <div className="mt-8 flex gap-6">
             <button
@@ -53,7 +59,7 @@ const Productdetail = () => {
               Back
             </button>
             <button
-              onClick={() =>navigate(`/admin/producte/${item.id}`) }
+              onClick={() =>navigate(`/admin/producte/${item.productId}`) }
               className="flex-1 py-3 bg-teal-700 text-lg text-white font-semibold rounded-md hover:bg-teal-800 transition duration-300"
             >
               Edit

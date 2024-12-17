@@ -5,35 +5,54 @@ import { NavLink, useNavigate } from "react-router-dom";
 import logo from '../assets/logo.png';
 import { FaSearch, FaShoppingCart, FaUser } from 'react-icons/fa';
 import axios from 'axios';
+import { FaHeart } from "react-icons/fa6";
+import { useSelector,useDispatch } from 'react-redux';
 import { useCart} from '../Context/Cartcontext';
+import { fetchWishlist } from '../Redux/Slices/WishListSlice';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { cart } = useCart(); // Get cart from context
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
-
+  const userId = localStorage.getItem("userToken");
+  const {wishlist}=useSelector(state=>state.wishlist)
   const [search, setSearch] = useState("");
   const [items, setItems] = useState([]);
-  const [filtered, setFiltered] = useState([]);
+  const dispatch=useDispatch();
+  // const [filtered, setFiltered] = useState([]);
 
   const handleClick = () => {
     navigate("/cart");
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3001/products")
-      .then((res) => setItems(res.data))
+    if(!search){
+      setItems([])
+      return
+    }
+
+  
+    axios.get(`https://localhost:7151/api/Product/search-item?search=${search}`)
+      .then((res) =>{console.log(res.data)
+         setItems(res.data || [])
+      })
       .catch((err) => console.log("fetching error", err));
-  }, []);
+  }, [search]);
 
-  useEffect(() => {
-    setFiltered(items.filter((item) => item.category.toLowerCase().includes(search.toLowerCase())));
-  }, [items, search]);
-
+  useEffect(()=>{
+    if(userId){
+      dispatch(fetchWishlist)
+    }
+  },[dispatch,userId])
+  
   const handleProductClick = (id) => {
     navigate(`/product/${id}`);
   };
+
+  const handleWishlist = ()=>{
+    if(userId) navigate('/wishlist');
+    else navigate('/login');
+  }
 
   return (
     <nav className="fixed w-[100%] bg-teal-800 shadow-md z-10">
@@ -54,6 +73,7 @@ const Navbar = () => {
               <div className="relative">
                 <input
                   type="text"
+                  value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search"
                   className="block w-60 placeholder-white  pr-3 py-1 text-md text-white border-b border-white rounded-none bg-transparent shadow-none focus:outline-none focus:ring-0 focus:border-white focus:w-96  transition-all duration-300 ease-in-out"
@@ -61,17 +81,17 @@ const Navbar = () => {
                 <div className="absolute inset-y-0 right-0 flex items-center pl-3">
                   <FaSearch className="h-5 w-5 text-white" />
                 </div>
-                <div style={{ display: { filtered } ? 'hidden' : 'block' }}
+                <div style={{ display:  items.length>0  ? 'hidden' : 'block' }}
                   className=" w-full max-h-40 absolute z-50 bg-white rounded-md shadow-md mt-2 overflow-auto scroll-bar-hidden">
                   <ul>
-                    {filtered.length !== items.length ? (
-                      filtered.map((item) => (
+                    {items.length !== 0 ? (
+                      items.map((item) => (
                         <li
-                          key={item.id}
-                          onClick={() => handleProductClick(item.id)}
+                          key={item.productId}
+                          onClick={() => handleProductClick(item.ProductId)}
                           className="p-2 cursor-pointer hover:bg-gray-100"
                         >
-                          <strong className='text-teal-800'>{item.name}</strong>
+                          <strong className='text-teal-800'>{item.productName}</strong>
                           <p className="text-gray-500">{item.category}</p>
                         </li>
                       ))
@@ -83,10 +103,19 @@ const Navbar = () => {
 
             <button className="text-white hover:text-gray-200 p-1 relative"
               onClick={handleClick}>
-              {userId && cart.length > 0 ? (
-                <div className='h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0'>{cart.length}</div>
+              {userId && cart.totalItem > 0 ? (
+                <div className='h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0'>{cart.totalItem}</div>
               ) : (null)}
               <FaShoppingCart className="h-6 w-6" />
+            </button>
+
+            <button onClick={handleWishlist} className="text-white hover:text-gray-200 p-1 relative">
+                {(userId && wishlist.length != 0) ? (
+                  <div className="h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0">{wishlist.length}</div>
+                ):(null)
+                }
+                <FaHeart className="h-6 w-6 text-white" />
+                <p className="text-white"></p>
             </button>
 
             {userId ? (
@@ -145,11 +174,11 @@ const Navbar = () => {
                   <div className="absolute inset-y-0 right-0 flex items-center pl-3">
                     <FaSearch className="h-5 w-5 text-white" />
                   </div>
-                  <div style={{ display: { filtered } ? 'hidden' : 'block' }}
+                  <div style={{ display: { items } ? 'hidden' : 'block' }}
                     className=" w-full max-h-40 absolute z-50 bg-white rounded-md shadow-md mt-2 overflow-auto scroll-bar-hidden">
                     <ul>
-                      {filtered.length !== items.length ? (
-                        filtered.map((item) => (
+                      {items.length !== 0 ? (
+                        items.map((item) => (
                           <li
                             key={item.id}
                             onClick={() => handleProductClick(item.id)}
@@ -171,11 +200,19 @@ const Navbar = () => {
               <div className="flex items-center space-x-4 mt-4 justify-center">
                 <button className="text-white hover:text-gray-200 p-1 relative"
                   onClick={handleClick}>
-                  {(userId && cart.length > 0) ? (
-                    <div className='h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0'>{cart.length}</div>
+                  {(userId && cart.totalItem > 0) ? (
+                    <div className='h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0'>{cart.totalItem}</div>
                   ) : (null)}
                   <FaShoppingCart className="h-6 w-6" />
                 </button>
+                <button onClick={handleWishlist} className="text-white hover:text-gray-200 p-1 relative">
+                {(userId && wishlist.length != 0) ? (
+                  <div className="h-4 w-4 bg-red-800 text-xs rounded-full font-bold absolute top-0 right-0">{wishlist.length}</div>
+                ):(null)
+                }
+                <FaHeart className="h-6 w-6 text-white" />
+                <p className="text-white"></p>
+            </button>
                 {userId ? (
                   <div className="relative">
                     <button

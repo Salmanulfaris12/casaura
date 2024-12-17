@@ -1,23 +1,15 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Context/Cartcontext'; 
 
 const Profile = () => {
   const [user, setUser] = useState({});
-  const userId = localStorage.getItem('userId');
-  const navigate = useNavigate(); // Use navigate for programmatic navigation
+  const{cart}=useCart();
+  const name = localStorage.getItem('name');
+  const email=localStorage.getItem('email');
+  const navigate = useNavigate(); 
 
-  useEffect(() => {
-    if(userId){
-    axios.get(`http://localhost:3001/users/${userId}`)
-      .then((res) => setUser(res.data))
-      .catch((err) => console.log('Fetching error..', err));
-    }
-  }, [userId]);
-
-
-
-  // Redirect to order summary page
   const handleOrderSummary = () => {
     navigate('/order-summary');
   };
@@ -28,23 +20,19 @@ const Profile = () => {
         <h2 className="text-2xl font-bold text-teal-800 mb-4 text-center">Profile Information</h2>
         <div className="space-y-4">
           <div className="flex justify-between">
-            <span className="font-semibold text-teal-700">User ID:</span>
-            <span className="text-gray-600 text-left">{user.id}</span>
-          </div>
-          <div className="flex justify-between">
             <span className="font-semibold text-teal-700">Name:</span>
-            <span className="text-gray-600 text-right">{user.name}</span>
+            <span className="text-gray-600 text-right">{name}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold text-teal-700">Email:</span>
-            <span className="text-gray-600 text-right">{user.email}</span>
+            <span className="text-gray-600 text-right">{email}</span>
           </div>
-          {user.cart && user.cart.length > 0 ? (
+          {cart && cart.totalItem > 0 ? (
             <div className="flex justify-between">
               <span className="font-semibold text-teal-700">Cart Items:</span>
               <div className="text-gray-600 text-left">
-                {user.cart.map((item, index) => (
-                  <li key={index}>{item.name} - {item.category} ({item.quantity})</li>
+                {cart.cartItemsperUser.map((item, index) => (
+                  <li key={index}>{item.productName} - ({item.quantity})</li>
                 ))}
               </div>
             </div>

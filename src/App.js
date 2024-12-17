@@ -24,6 +24,9 @@ import EditProducts from './Admin/EditProducts';
 import AdminLayout from './Admin/AdminLayout';
 import NoMatch from './components/Nomatch';
 import Dashboard from './Admin/Dashboard';
+import Wishlist from './components/WishList';
+import Address from './components/Address';
+import OrderDetails from './Admin/OrderDetails';
 
 
 
@@ -42,11 +45,13 @@ const display=location.pathname.startsWith("/admin")
       <Route path="/store" element={<Store/>}/>
       <Route path="/product/:id" element={<Productdetails/>}/>
       <Route path='/category' element={<Categories/>}/>
-      <Route path='/category/:category' element={<ItemPerCategory/>} />
+      <Route path='/category/:categoryid' element={<ItemPerCategory/>} />
       <Route path='/cart' element={<Cart/>}/>
+      <Route path='/wishlist' element={<Wishlist/>}/>
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/payment' element={<Payment/>}/>
       <Route path='/order-summary' element={<Ordersummary/>}/>
+      <Route path='/address' element={<Address />} />
 
       {/* admin section */}
 
@@ -56,10 +61,11 @@ const display=location.pathname.startsWith("/admin")
         <Route path='userlist' element={<Userlist/>}/>
         <Route path='userd/:userid' element={<UserDetails/>}/>
         <Route path='productlist' element={<Productlist/>}/>
-        <Route path='productl/:productcategory' element={<Productspercategory/>}/>
+        <Route path='productl/:categoryId' element={<Productspercategory/>}/>
         <Route path='productd/:id' element={<Productdetail/>}/>
         <Route path='producte/:id' element={<EditProducts/>}/>
         <Route path='addproducts' element={<AddProducts/>}/>
+        <Route path='orderdetails' element={<OrderDetails/>}/>
       </Route>
       <Route path='*' element={<NoMatch/>}/>
     </Routes>

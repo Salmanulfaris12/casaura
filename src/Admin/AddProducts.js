@@ -8,31 +8,62 @@ const AddProducts = () => {
   // Formik setup with initial values, validation schema, and submit handler
   const formik = useFormik({
     initialValues: {
-      name: '',
-      description: '',
-      category: '',
-      price: '',
-      material: '',
-      image: '',
+      ProductName: '',
+      ProductDescription: '',
+      CategoryId: '',
+      Material: '',
+      ProductPrice: '',
+      MRP: '',
+      Stock: '',
+      image: null,
+
     },
     validationSchema: Yup.object({
-      name: Yup.string().required('Name is required'),
-      description: Yup.string().required('Description is required'),
-      category: Yup.string().required('Category is required'),
-      price: Yup.number().required('Price is required').positive('Price must be positive'),
-      material: Yup.string().required('Material is required'),
-      image: Yup.string().url('Invalid URL format').required('Image URL is required'),
+      ProductName: Yup.string().required('Product name is required'),
+      ProductDescription: Yup.string().required('Product description is required'),
+      // CategoryId: Yup.number().required('Category is required'),
+      Material: Yup.string().required('Material is required'),
+      ProductPrice: Yup.number()
+        .required('Price is required')
+        .positive('Price must be greater than or equal to 0'),
+      MRP: Yup.number()
+        .required('MRP is required')
+        .positive('MRP must be greater than or equal to 0'),
+      Stock: Yup.number()
+        .required('Stock is required')
+        .min(0, 'Stock must be greater than or equal to 0'),
     }),
     onSubmit: (values, { resetForm }) => {
+      const formData = new FormData();
+    
+      // Add the DTO fields to `productdto`
+      formData.append("ProductName", values.ProductName);
+      formData.append("ProductDescription", values.ProductDescription);
+      formData.append("CategoryId", values.CategoryId);
+      formData.append("Material", values.Material);
+      formData.append("ProductPrice", values.ProductPrice);
+      formData.append("MRP", values.MRP);
+      formData.append("Stock", values.Stock);
+      
+      formData.append("image", values.image); 
+    
       axios
-        .post('http://localhost:3001/products', values)
+        .post('https://localhost:7151/api/Product/Add', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', 
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`, 
+          },
+        })
         .then((res) => {
           console.log(res.data);
-          resetForm();
+          alert("Product Added successfully");
+          resetForm(); 
         })
-        .catch((err) => console.log('Error in submitting', err));
+        .catch((err) => console.error("Error fetching users:", err.response?.data || err.message));
     },
+    
   });
+  
 
   return (
     <div className="w-full max-w-lg mx-auto bg-white p-6 md:p-8 mt-10 rounded-xl shadow-lg border border-gray-200">
@@ -43,14 +74,14 @@ const AddProducts = () => {
           <label className="text-lg font-medium text-teal-700">Item Name</label>
           <input
             type="text"
-            name="name"
-            value={formik.values.name}
+            name="ProductName"
+            value={formik.values.ProductName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
           />
-          {formik.touched.name && formik.errors.name && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
+          {formik.touched.productName && formik.errors.ProductName && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.ProductName}</p>
           )}
         </div>
 
@@ -58,15 +89,15 @@ const AddProducts = () => {
         <div className="flex flex-col">
           <label className="text-lg font-medium text-teal-700">Item Description</label>
           <textarea
-            name="description"
-            value={formik.values.description}
+            name="ProductDescription"
+            value={formik.values.ProductDescription}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150 resize-none"
             rows="4"
           ></textarea>
-          {formik.touched.description && formik.errors.description && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.description}</p>
+          {formik.touched.ProductDescription && formik.errors.ProductDescription && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.ProductDescription}</p>
           )}
         </div>
 
@@ -74,8 +105,8 @@ const AddProducts = () => {
         <div className="flex flex-col">
           <label className="text-lg font-medium text-teal-700">Item Category</label>
           <select
-            name="category"
-            value={formik.values.category}
+            name="CategoryId"
+            value={formik.values.CategoryId}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
@@ -83,16 +114,14 @@ const AddProducts = () => {
             <option value="" disabled hidden>
               Select Category
             </option>
-            <option value="Sofas">Sofas</option>
-            <option value="Tables">Tables</option>
-            <option value="Dining Tables">Dining Tables</option>
-            <option value="Gaming chairs">Gaming chairs</option>
-            <option value="Chairs">Chairs</option>
-            <option value="Beds">Beds</option>
-            <option value="Mattresses">Mattresses</option>
+            <option value="2006">Sofas</option>
+            <option value="2007">Tables</option>
+            <option value="2010">Dining Tables</option>
+            <option value="2009">Chairs</option>
+            <option value="2008">Beds</option>
           </select>
-          {formik.touched.category && formik.errors.category && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.category}</p>
+          {formik.touched.category && formik.errors.CategoryId && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.CategoryId}</p>
           )}
         </div>
 
@@ -101,14 +130,14 @@ const AddProducts = () => {
           <label className="text-lg font-medium text-teal-700">Item Price</label>
           <input
             type="number"
-            name="price"
-            value={formik.values.price}
+            name="ProductPrice"
+            value={formik.values.ProductPrice}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
           />
-          {formik.touched.price && formik.errors.price && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.price}</p>
+          {formik.touched.ProductPrice && formik.errors.ProductPrice && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.ProductPrice}</p>
           )}
         </div>
 
@@ -117,31 +146,63 @@ const AddProducts = () => {
           <label className="text-lg font-medium text-teal-700">Item Material</label>
           <input
             type="text"
-            name="material"
-            value={formik.values.material}
+            name="Material"
+            value={formik.values.Material}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
           />
-          {formik.touched.material && formik.errors.material && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.material}</p>
+          {formik.touched.Material && formik.errors.Material && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.Material}</p>
           )}
         </div>
 
-        {/* Item Image URL */}
+                {/* Item Stock */}
         <div className="flex flex-col">
-          <label className="text-lg font-medium text-teal-700">Item Image URL</label>
+          <label className="text-lg font-medium text-teal-700">Item Stock</label>
           <input
-            type="text"
-            name="image"
-            value={formik.values.image}
+            type="number"
+            name="Stock"
+            value={formik.values.Stock}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
           />
-          {formik.touched.image && formik.errors.image && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.image}</p>
+          {formik.touched.Stock && formik.errors.Stock && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.Stock}</p>
           )}
+        </div>
+
+        {/* Item MRP */}
+        <div className="flex flex-col">
+          <label className="text-lg font-medium text-teal-700">Item MRP</label>
+          <input
+            type="number"
+            name="MRP"
+            value={formik.values.MRP}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
+          />
+          {formik.touched.MRP && formik.errors.MRP && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.MRP}</p>
+          )}
+        </div>
+
+
+        {/* Item Image  */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Image
+          </label>
+          <input
+            type="file"
+            name="image"
+            onChange={(e) => formik.setFieldValue("image", e.target.files[0])}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2"
+            accept="image/*"
+            required
+          />
         </div>
 
         <button

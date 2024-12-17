@@ -12,10 +12,10 @@ const Login = () => {
     password: ''
   });
   const [errors, setErrors] = useState({});
-  const adminId =localStorage.getItem("adminId")
+  const adminId =localStorage.getItem("adminToken")
 
-  useEffect((user)=>{
-    const storeduser= localStorage.getItem("user")
+  useEffect(()=>{
+    const storeduser= localStorage.getItem("userToken")
     if(storeduser){
         navigate("/",{replace:true})
     }
@@ -37,47 +37,44 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      // Fetch users from the JSON server and check if the credentials match
-      axios.get("http://localhost:3001/users")
-        .then((res) => {
-          const users = res.data;
-          const user = users.find(
-            (user) => user.email === formData.email && user.password === formData.password
-          );
-          const isAdmin=user.isAdmin; 
-          if(isAdmin){
-            console.log("Admin login successfull:",user)
-            localStorage.setItem("adminId",user.id)
-            navigate("/admin")
-          }
-          else if (user && user.isAllowed) {
-            console.log("Login successful:", user);
-
-            localStorage.setItem("userId",user.id)
-            setFormData({
-                email: '',
-                password: ''
-            })
-            navigate("/",{replace:true})
-            // alert("Login Successfull")
-          }else if(!user.isAllowed){
-            setErrors({login:"You restricted or Blocked"})
-          }
-           else {
-            setErrors({ login: "Invalid email or password" });
-          }
-        })
-        .catch((err) => {
-          console.log("Error fetching users:", err);
-        });
+      return;
+    }
+    
+    try {
+      console.log("Submitting login request with:", formData);
+      const response = await axios.post(
+        "https://localhost:7151/api/Auth/Login",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      const users = response.data.data;
+      if (users.role === "admin") {
+        console.log("Admin login successful:", users);
+        localStorage.setItem("adminToken", users.token);
+        navigate("/admin");
+      } else if (users && !users.isBlocked) {
+        console.log("User login successful:", users);
+        localStorage.setItem("userToken", users.token);
+        localStorage.setItem("name", users.name);
+        localStorage.setItem("email", users.email);
+        setFormData({ email: "", password: "" });
+        navigate("/", { replace: true });}
+    } catch (err) {
+      console.error("Error fetching users:", err.response?.data || err.message);
+      setErrors({ login: `${err.response?.data.error}` });
     }
   };
+  
 
   useEffect(()=>{
     if(adminId){
@@ -85,7 +82,7 @@ const Login = () => {
     }
     console.log("kkkk");
     
-  },[])
+  },[adminId])
   return (
     <div className='min-h-screen bg-teal-800 flex items-center justify-center'>
       <div className='w-full max-w-md bg-white p-8 rounded-lg shadow-lg'>

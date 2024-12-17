@@ -6,38 +6,74 @@ const EditProducts = () => {
     const {id}=useParams()
     const [errors,setErrors]=useState({})
     const [product,setProduct]=useState({
-        name: '',
-        description: '',
-        category: '',
-        price: '',
-        material: '',
-        image: '',
+      ProductName: '',
+      ProductDescription: '',
+      CategoryId: '',
+      Material: '',
+      ProductPrice: '',
+      MRP: '',
+      Stock: '',
+      image: null,
     })
     const navigate=useNavigate()
 
     const validate = () => {
         const errors = {};
-        if (!product.name) errors.name = 'Name is required';
-        if (!product.description) errors.description = 'Description is required';
-        if (!product.category) errors.category = 'Category is required';
-        if (!product.price) errors.price = 'Price is required';
-        if (!product.material) errors.material = 'Material is required';
+        if (!product.ProductName) errors.ProductName = 'Name is required';
+        if (!product.ProductDescription) errors.ProductDescription = 'Description is required';
+        if (!product.CategoryId) errors.CategoryId = 'Category is required';
+        if (!product.ProductPrice) errors.ProductPrice = 'Price is required';
+        if (!product.Material) errors.Material = 'Material is required';
+        if(!product.MRP)errors.MRP='Mrp is required';
+        if(!product.Stock)errors.Stock='stock is Required'
+        if(product.Stock < 1) errors.Stock = 'stock must greater than 1'
+        if(product.MRP < product.ProductPrice) errors.MRP = 'mrp must greater than price';
         if (!product.image) errors.image = 'Image URL is required';
         return errors;
       };
 
     useEffect(()=>{
-        axios.get(`http://localhost:3001/products/${id}`)
-        .then(res=>setProduct(res.data))
+        axios.get(`https://localhost:7151/api/Product/GetById/${id}`)
+        .then(res=>{console.log(res.data.data);
+    const dataRes=  res.data.data
+    let CategoryId
+    if(dataRes.categoery=="Sofas")CategoryId=2006
+    else if(dataRes.categoery=="Tables")CategoryId=2007
+    else if(dataRes.categoery=="Dining Tables")CategoryId=2010
+    else if(dataRes.categoery=="Chairs")CategoryId=2009
+    else if(dataRes.categoery=="Beds")CategoryId=2008
+   
+          setProduct(
+            {
+              ProductName:dataRes.productName,
+              ProductDescription:dataRes.productDescription,
+              CategoryId:CategoryId,
+              Material:dataRes.material,
+              ProductPrice:dataRes.productPrice,
+              MRP:dataRes.mrp,
+              Stock:dataRes.stock,
+              image: dataRes.image,
+            }
+
+          )})
     },[])
 
-    const handleChange=(e)=>{
-        setProduct({
-            ...product,
-           [e.target.name]:e.target.value
-        })
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setProduct({
+        ...product,
+        [name]: value, // Dynamically update the field by its name
+      });
+    };
 
-    }
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      setProduct({
+          ...product,
+          image: file, // Set the file object to the 'image' field
+      });
+  };
+    
 
     const handleSubmit= async(e)=>{
         e.preventDefault();
@@ -47,21 +83,33 @@ const EditProducts = () => {
         }
         else{
             try{
-                await axios.put(`http://localhost:3001/products/${id}`,product)
+              const formData = new FormData();
+              Object.keys(product).forEach((key) => {
+                  formData.append(key, product[key]);
+              });
+                await axios.put(`https://localhost:7151/api/Product/Update/${id}`,formData,{
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                     Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+                },
+                })
                 setProduct({
-                    name: '',
-                    description: '',
-                    category: '',
-                    price: '',
-                    material: '',
-                    image: '',
+                  ProductName: '',
+                  ProductDescription: '',
+                  CategoryId: '',
+                  Material: '',
+                  ProductPrice: '',
+                  MRP: '',
+                  Stock: '',
+                  image: null,
                 })
                 setErrors({})
                 alert("Product updated successfully")
                 navigate(-1,{replace:true})
             }
-            catch{
-                console.log("error")
+            catch(err){
+                console.log("error",err.response?.data)
+                alert(`${err.response?.data.error}`)
             }
         }
 
@@ -75,72 +123,107 @@ const EditProducts = () => {
         <label className="text-lg font-medium text-teal-700">Item Name</label>
         <input
           type="text"
-          name="name"
-          value={product.name}
+          name="ProductName"
+          value={product.ProductName}
           onChange={handleChange}
           className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
         />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        {errors.ProductName && <p className="text-red-500 text-sm mt-1">{errors.ProductName}</p>}
       </div>
 
       <div className="flex flex-col">
         <label className="text-lg font-medium text-teal-700">Item Description</label>
         <textarea
-          name="description"
-          value={product.description}
+          name="ProductDescription"
+          value={product.ProductDescription}
           onChange={handleChange}
           className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150 resize-none"
           rows="4"
         ></textarea>
-        {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+        {errors.ProductDescription && <p className="text-red-500 text-sm mt-1">{errors.ProductDescription}</p>}
       </div>
 
+
       <div className="flex flex-col">
-        <label className="text-lg font-medium text-teal-700">Item Category</label>
-        <input
-          type="text"
-          name="category"
-          value={product.category}
-          onChange={handleChange}
-          className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
-        />
-        {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
-      </div>
+      <label className="text-lg font-medium text-teal-700">Item Category</label>
+      <select
+        name="CategoryId"
+        value={product.CategoryId}
+        onChange={handleChange}
+        className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
+      >
+            <option value={null} >
+               Select the Category
+            </option>
+            <option value={2006}>Sofas</option>
+            <option value={2007}>Tables</option>
+            <option value={2010}>Dining Tables</option>
+            <option value={2009}>Chairs</option>
+            <option value={2008}>Beds</option>
+      </select>
+      {errors.CategoryId && <p className="text-red-500 text-sm mt-1">{errors.CategoryId}</p>}
+    </div>
+
 
       <div className="flex flex-col">
         <label className="text-lg font-medium text-teal-700">Item Price</label>
         <input
           type="number"
-          name="price"
-          value={product.price}
+          name="ProductPrice"
+          value={product.ProductPrice }
           onChange={handleChange}
           className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
         />
-        {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+        {errors.ProductPrice && <p className="text-red-500 text-sm mt-1">{errors.ProductPrice}</p>}
       </div>
 
       <div className="flex flex-col">
         <label className="text-lg font-medium text-teal-700">Item Material</label>
         <input
           type="text"
-          name="material"
-          value={product.material}
+          name="Material"
+          value={product.Material}
           onChange={handleChange}
           className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
         />
-        {errors.material && <p className="text-red-500 text-sm mt-1">{errors.material}</p>}
+        {errors.Material && <p className="text-red-500 text-sm mt-1">{errors.Material}</p>}
       </div>
 
-      <div className="flex flex-col">
-        <label className="text-lg font-medium text-teal-700">Item Image URL</label>
+        {/* Item MRP */}
+        <div className="flex flex-col">
+        <label className="text-lg font-medium text-teal-700">Item MRP</label>
         <input
-          type="text"
-          name="image"
-          value={product.image}
-          onChange={handleChange}
-          className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
+            type="number"
+            name="MRP"
+            value={product.MRP}
+            onChange={handleChange}
+            className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
         />
-        {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+        {errors.MRP && <p className="text-red-500 text-sm mt-1">{errors.MRP}</p>}
+    </div>
+
+      {/* Item Stock */}
+      <div className="flex flex-col">
+          <label className="text-lg font-medium text-teal-700">Item Stock</label>
+          <input
+              type="number"
+              name="Stock"
+              value={product.Stock}
+              onChange={handleChange}
+              className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
+          />
+          {errors.Stock && <p className="text-red-500 text-sm mt-1">{errors.Stock}</p>}
+      </div>
+      <div className="flex flex-col">
+          <label className="text-lg font-medium text-teal-700">Item Image</label>
+          <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="p-3 mt-1 border border-gray-300 rounded-md focus:border-teal-600 focus:ring-2 focus:ring-teal-500 outline-none transition ease-in-out duration-150"
+          />
+          {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
       </div>
 
       <button

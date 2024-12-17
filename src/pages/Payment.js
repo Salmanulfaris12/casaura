@@ -1,219 +1,242 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { fetchAddress } from '../Redux/Slices/AddressSlice';
 import { useCart} from '../Context/Cartcontext';
 
+
+const loadScript = (src) => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const Payment = () => {
-  const {setCart}=useCart();
-  const [items, setItems] = useState([]);
-  const [errors,setErrors] =useState({})
-  const userId = localStorage.getItem('userId');
-  const [formData,setFormData]=useState({
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    phoneNumber: '',
-    paymentMethod: ''
-  })
+  const {getcart,cart,setCart}=useCart();
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const dispatch =useDispatch()
   const navigate=useNavigate()
+  const {address} = useSelector(state => state.address);
 
-  const calculateSubTotal = () => {
-    return items.reduce((total, ele) => total + ele.price * ele.quantity, 0);
+  const handleDropdownChange = (event) => {
+    const selectedId = Number(event.target.value);
+    const selectedAddr = address.find((addr) => addr.addressId === selectedId);
+    setSelectedAddress(selectedAddr);
   };
+  console.log("addres in payment", address)
 
-  const calculateDiscount = () => {
-    return calculateSubTotal() * 0.05;
-  };
+  const [razor, setRazor] = useState(null);
+  const [isRazorpay, setIsRazorpay] = useState(false);
 
-  const calGrandTotal = () => {
-    return calculateSubTotal() - calculateDiscount();
-  };
+  const handleConfirmPayment = async (values)=>{
+  if(!isRazorpay){
+    const scriptLoaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+    setIsRazorpay(scriptLoaded);
 
-  const total = calGrandTotal();
+    if(!scriptLoaded){
+      alert("Failed to load payment gateway. Please try again later");
+      return;
+    }
+  }
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  console.log(formData)
-
-  const validate =()=>{
-    const errors ={}
-    if(!formData.address)errors.address="Address is required";
-    if(!formData.city)errors.city="Name of your city is required"
-    if(!formData.state)errors.state="State is required";
-    if(!formData.phoneNumber)errors.phoneNumber="Number is required ";
-    else if (formData.phoneNumber.length<10 || formData.phoneNumber.length>10)errors.phoneNumber="Invalid phone number ";
-    if(!formData.zipCode)errors.zipCode="zip-code is required";
-    if(!formData.paymentMethod)errors.paymentMethod="you should choose any payment method";
-
-    return errors
+  if (!selectedAddress) {
+    alert("An Address need to be selected");
+    return;
   }
  
 
-  useEffect(() => {
-    if(userId){
-    axios.get(`http://localhost:3001/users/${userId}`)
-      .then((res) => setItems(res.data.cart))
-      .catch((err) => console.log('fetching error...', err));
-    }
-  }, [userId]);
+  try{
+    // create order id
+    const res = await axios.post(`https://localhost:7151/api/Order/order-create?price=${cart.totalPrice}`,
+      {},
+      {
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`
+        }
+      }
+    );
+    
+    const orderId = res.data;
+    console.log("order id", orderId);
 
+    // add razorpay options
+    
+    const options = {
+      key: "rzp_test_JtEUXj0BHIAbcC", // Razorpay API key
+      amount: cart.totalPrice * 100, // amount in paise
+      currency: "INR",
+      name: "CasaAura",
+      description: "Order Payment",
+      order_id: orderId,
+      handler: async function (response) {
+        console.log("options==>",response);
 
-  const handleSubmit=async(e)=>{
-    e.preventDefault();
-    const validationErrors=validate()
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    }else {
-    try{
-        await axios.patch(`http://localhost:3001/users/${userId}`,{orderdetails:{product:[...items],Address:[formData],totalPrice:total}})
-        await axios.patch(`http://localhost:3001/users/${userId}`,{cart:[]})
-        navigate("/order-summary",{replace:true})
-        setErrors({})
-        setCart([])
-    }
-    catch{
-        console.log("error")
-    }
+        const paymentData = {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        };
+
+        setRazor(paymentData);
+
+        try{
+
+          await axios.post("https://localhost:7151/api/Order/payment",
+            paymentData,
+            {
+              headers:{
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`
+              }
+            });
+            
+
+          await axios.post("https://localhost:7151/api/Order/placeOrder",
+            {
+              addressId: selectedAddress.addressId,
+              totalPrice: cart.totalPrice,
+              orderString: response.razorpay_order_id,
+              transactionId: response.razorpay_payment_id
+            },
+            {
+              headers:{
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`
+              }
+            });
+
+              alert("Order placed successfully!");
+              const updatedcart =getcart()
+              setCart(updatedcart)
+              navigate('/');
+        }
+        catch(error){
+          console.log("==>",error.response)
+          alert(error.response)
+        }
+      },
+
+      theme: {
+        color: "#115e59"
+      }
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+
   }
-
+  catch(error){
+    console.log("===>",error);
+    alert("Error creating order. Please try again.");
   }
+}
+
+
+useEffect(()=>{
+dispatch(fetchAddress())
+},[])
 
   return (
-    <div className=" min-h-screen flex flex-col items-center bg-teal-800">
-      <div className=" mt-16 bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
-        <h1 className="text-2xl font-bold text-teal-700 mb-6 text-center">Confirm Payment</h1>
+      <div className='container mx-auto py-12 px-4 bg-gray-100 '>
+        <div className={`flex flex-col md:flex-row p-4 justify-between max-w-7xl mx-5 md:mt-14 mt-64 `}>
 
-        {/* Cart Items */}
-        <div className="space-y-4">
-          {items.map((item, index) => (
-            <div key={index} className="flex justify-between items-center border-b border-gray-200 pb-4">
-              <div>
-                <h3 className="font-bold text-teal-700">{item.name}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-                <p className="text-gray-500">Quantity: {item.quantity}</p>
+
+        {/* Delivery Address */}
+        <div className={`w-full md:w-1/2 bg-white p-6 rounded-lg shadow-lg `}>
+          <h2  className="text-2xl text-teal-700 font-bold mb-6">
+            Delivery Address
+          </h2>
+
+
+          <div className="p-6 max-w-md mx-auto bg-white shadow rounded-lg space-y-4">
+            <h2 style={{ color: "#052560" }} className="text-lg font-semibold text-gray-700">Select an Address</h2>
+              <div className="space-y-3">
+                <select
+                  onChange={handleDropdownChange}
+                  className="w-full border border-gray-300 rounded-lg p-2"
+                  defaultValue=""
+                  >
+                  <option value="" disabled>
+                    Choose an address
+                  </option>
+                  {address.map((address, index) => (
+                    <option key={address.addressId} value={address.addressId}>
+                      Address : {index+1}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={()=> navigate('/address')}
+                  className="w-full bg-teal-700 text-white py-2 mt-6 rounded-lg hover:bg-teal-600">
+                  Add New Address
+                </button>
               </div>
-              <div className="text-teal-800 font-semibold">${item.price * item.quantity}</div>
-            </div>
-          ))}
 
-          {/* Totals */}
-          <div className="mt-6">
-            <div className="flex justify-between">
-              <span className="font-semibold text-teal-700">Subtotal:</span>
-              <span className="text-teal-800">${calculateSubTotal().toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-teal-700">Discount (5%):</span>
-              <span className="text-teal-800">-${calculateDiscount().toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between font-bold text-lg mt-4">
-              <span className="text-teal-800">Total:</span>
-              <span className="text-teal-800">${total.toFixed(2)}</span>
-            </div>
+              {selectedAddress && (
+                <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-md">
+                  <h3 className="font-bold text-teal-700">Selected Address Details</h3>
+                  <p>
+                    <span className="font-medium text-teal-700">Full Name:</span>{" "}
+                    {selectedAddress.fullName}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">House Name:</span>{" "}
+                    {selectedAddress.houseName}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">Landmark:</span>{" "}
+                    {selectedAddress.landMark}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">Phone Number:</span>{" "}
+                    {selectedAddress.phoneNumber}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">Pincode:</span>{" "}
+                    {selectedAddress.pincode}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">Place:</span>{" "}
+                    {selectedAddress.place}
+                  </p>
+                  <p>
+                    <span className="font-medium text-teal-700">Post Office:</span>{" "}
+                    {selectedAddress.postOffice}
+                  </p>
+                </div>
+              )}
           </div>
+
+
+          
         </div>
 
-        {/* Shipping and Payment Form */}
-        <div className="mt-10">
-          <form onSubmit={handleSubmit}>
-            <h2 className="text-xl font-bold text-teal-700 mb-4">Shipping Address</h2>
+        {/* Right Side: Payment Section */}
+        <div className={`w-full md:w-1/2 bg-white p-6 rounded-lg shadow-lg mt-8 md:mt-0 md:ml-4`}>
+          <h2 className="text-2xl text-teal-700 font-bold mb-6">
+            Order Summary
+          </h2>
+          <p className="text-lg font-semibold mb-4 bg-slate-100 p-2 rounded-lg">
+            Total Items: ₹ {cart.totalItem}
+          </p>
+          <p className="text-lg font-semibold mb-4 bg-slate-300 p-2 rounded-lg">
+            Final Price: ₹ {cart.totalPrice}
+          </p>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <label className="block text-gray-700">Address</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-                {errors.address&& <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-                {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700">State</label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-                {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700">Zip Code</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-                {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700">Phone Number</label>
-                <input
-                  type="number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-                {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>}
-              </div>
-            </div>
-
-            {/* Payment Method */}
-            <h2 className="text-xl font-bold text-teal-700 mt-8 mb-4">Payment Method</h2>
-
-            <div className="flex space-x-4">
-              <div className="flex items-center">
-                <input type="radio" id="upi" name="paymentMethod" className="h-4 w-4 text-teal-600" onChange={handleChange} value="upi" checked={formData.paymentMethod==="upi"} />
-                <label htmlFor="upi" className="ml-2 text-gray-700">UPI</label>
-              </div>
-              <div className="flex items-center">
-                <input type="radio" id="card" name="paymentMethod" className="h-4 w-4 text-teal-600"  onChange={handleChange} value="card" checked={formData.paymentMethod==="card"} />
-                <label htmlFor="card" className="ml-2 text-gray-700">Card</label>
-              </div>
-              <div className="flex items-center">
-                <input type="radio" id="cod" name="paymentMethod" className="h-4 w-4 text-teal-600"  onChange={handleChange} value="cash" checked={formData.paymentMethod==="cash"}/>
-                <label htmlFor="cod" className="ml-2 text-gray-700">Cash on Delivery</label>
-              </div>
-              {errors.paymentMethod && <p className="text-red-500 text-xs mt-1">{errors.paymentMethod}</p>}
-            </div>
-
-            {/* Place Order Button */}
-            <div className="mt-8">
-              <button
-                type="submit"
-                className="w-full bg-teal-700 text-white py-2 px-4 rounded-lg hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600"
-              >
-                Place Order
-              </button>
-            </div>
-          </form>
+          <button
+            onClick={handleConfirmPayment}
+            type="button"
+            className="w-full bg-teal-700 text-white py-2 mt-6 rounded-lg hover:bg-teal-700"
+          >
+            Confirm Payment
+          </button>
         </div>
-      </div>
-    </div>
+        </div>
+        </div>
   );
 };
 
